@@ -1,0 +1,56 @@
+--1--
+select * from Products 
+where UnitPrice > 30 and UnitPrice<40
+
+--2--
+select * from Products as P
+inner join Categories as C on c.CategoryID = P.CategoryID
+where c.CategoryName = 'condiments'
+
+--3---
+select * from Products as P
+inner join Categories as C on c.CategoryID = P.CategoryID
+where c.CategoryName like '%s%'
+order by p.ProductName
+
+--4--
+select distinct ProductName from Products as p
+inner join [Order Details] as od on od.ProductID = p.ProductID
+inner join Orders as o on o.OrderID = od.OrderID
+where o.CustomerID = 'ALFKI'
+
+--5--
+select * from Products as p
+inner join [Order Details] as od on od.ProductID = p.ProductID
+inner join Orders as o on o.OrderID = od.OrderID
+where (o.ShipCountry like 'Brazil') or (o.ShipCity like 'London')
+
+--6--
+select c.CustomerID from Customers as c
+inner join Orders as o on o.CustomerID = c.CustomerID
+inner join Shippers as s on s.ShipperID = o.ShipVia
+where s.CompanyName like 'Federal Shipping'
+
+--7--
+CREATE PROCEDURE getProductPrice @ProductID int
+as begin
+select ProductNamefrom Products as p where p.ProductID = @ProductID
+select UnitPrice from Products as p where p.ProductID = @ProductID
+end
+go
+exec getProductPrice 1
+drop procedure getProductPrice
+
+--8--
+select c.CustomerID,e.EmployeeID,o.ShipVia,o.Freight,o.ShipName,o.ShipAddress,o.ShipCity,o.ShipRegion,o.ShipPostalCode,o.ShipCountry from Orders as o
+inner join Customers as c on o.CustomerID = c.CustomerID
+inner join Employees as e on e.EmployeeID = o.EmployeeID
+inner join Shippers as s on s.ShipperID = o.ShipVia
+where (o.ShipVia = 1) and (e.EmployeeID = 5 or e.EmployeeID = 2) and (c.CustomerID like 'B%')
+
+--9--
+
+--10--
+select CustomerID,Region,Country from Customers
+where (Country like 'france' or Country like 'canada')
+order by CustomerID
